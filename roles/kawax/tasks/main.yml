@@ -1,0 +1,10 @@
+---
+- name: Install kawax script
+  get_url: url=https://github.com/ideascube/kawax-scripts/raw/master/kawax
+    dest=/usr/local/bin/kawax
+
+- cron:
+    name: "Update catalog and download zim from kiwix"
+    minute: "0"
+    hour: "3"
+    job: "/usr/local/bin/kawax update_catalogs && /usr/local/bin/kawax rsync_kiwix > /dev/null"

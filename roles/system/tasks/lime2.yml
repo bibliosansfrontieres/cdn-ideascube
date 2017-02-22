@@ -1,0 +1,57 @@
+---
+- name: Ensure the HDD mountpoint exists
+  file: path=/media/hdd state=directory mode=0755
+  when: sda1.stat.isblk == True 
+
+- name: Mount /dev/sda1
+  mount: name=/media/hdd/ src=/dev/sda1 fstype=ext4 state=mounted opts=noatime,nofail
+  when: sda1.stat.isblk == True
+
+- name: Add armbian repository 
+  apt_repository: repo='deb http://apt.armbian.com jessie main utils jessie-desktop' 
+    state=present 
+    filename='armbian'
+
+- name: Install last custom Kernel, Headers, DTB and U-Boot
+  apt: deb=http://filer.bsf-intranet.org/{{ item }}
+  with_items:
+   - linux-dtb-next-sunxi_5.23_armhf.deb
+   - linux-headers-next-sunxi_5.23_armhf.deb
+   - linux-image-next-sunxi_5.23_armhf.deb
+   - linux-u-boot-next-lime2_5.23_armhf.deb
+  notify: Reboot device
+
+- name: Add pinning for linux-u-boot-lime2-next package == DOT NOT UPGRADE THIS PACKAGE
+  copy: src=u-boot.apt-pin dest=/etc/apt/preferences.d/u-boot
+
+- name: Light LED at u-boot start
+  lineinfile: dest=/boot/boot.cmd
+              regexp='^gpio'
+              insertbefore=BOF
+              line='gpio set PH20\nsetenv bootdelay 0\nsaveenv'
+              backup=yes
+
+- name: Convert file from .cmd to .scr
+  command: mkimage -C none -A arm -T script -d /boot/boot.cmd /boot/boot.scr
+
+- name: Convert DTB file to DTS
+  command: dtc -I dtb -O dts /boot/dtb/sun7i-a20-olinuxino-lime2.dtb -o /boot/dtb/sun7i-a20-olinuxino-lime2.dts
+  when: ansible_kernel | version_compare('4', '>')
+
+- name: Change the PIN for the LED and Activate heartbeat mode
+  replace: dest=/boot/dtb/sun7i-a20-olinuxino-lime2.dts
+    regexp='gpios = <0x27 0x7 0x2 0x0>;' 
+    replace='gpios = <0x27 0x7 0x14 0x0>;\n                        linux,default-trigger = "heartbeat";'
+  when: ansible_kernel | version_compare('4', '>')
+
+- name: Convert DTS file to DTB
+  command: dtc -I dts -O dtb /boot/dtb/sun7i-a20-olinuxino-lime2.dts -o /boot/dtb/sun7i-a20-olinuxino-lime2.dtb
+  when: ansible_kernel | version_compare('4', '>')
+
+- name: Copy fex.file
+  template: src=lime2.fex.j2 dest=/boot/bin/lime2.fex
+  when: ansible_kernel | version_compare('4', '<')
+
+- name: Build binary from fex
+  shell: sunxi-fexc lime2.fex > lime2.bin chdir=/boot/bin/
+  when: ansible_kernel | version_compare('4', '<')

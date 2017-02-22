@@ -1,0 +1,21 @@
+---
+- name: Install nginx web server
+  apt: name=nginx state=latest force=yes
+
+- name: Remove default nginx vhost config file (if configured).
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: restart nginx
+
+- name: Upload nginx.conf
+  copy: src=nginx.conf dest=/etc/nginx/nginx.conf backup=yes
+  notify: restart nginx
+
+- name: Copy download.kiwix.org vhost
+  copy: src=download.kiwix.org dest=/etc/nginx/sites-available/download.kiwix.org backup=yes
+  notify: restart nginx
+
+- name: Enable Virtual host
+  file: src=/etc/nginx/sites-available/download.kiwix.org dest=/etc/nginx/sites-enabled/download.kiwix.org state=link
+  notify: restart nginx

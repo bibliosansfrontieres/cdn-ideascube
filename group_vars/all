@@ -1,0 +1,5 @@
+---
+#System
+timezone: "Europe/Paris"
+bsf_gateway: "10.10.9.1"
+hostname: "koombook-doctor"

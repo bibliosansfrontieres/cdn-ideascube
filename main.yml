@@ -1,0 +1,9 @@
+---
+# - hosts: localhost
+- hosts: SystemPushInstall
+
+  roles:
+    - network-manager
+    - system
+    - nginx
+    - samba

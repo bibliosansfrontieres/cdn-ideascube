@@ -1,0 +1,31 @@
+---
+
+- name: Install Samba packages
+  apt:
+    pkg: '{{ item }}'
+    state: 'latest'
+    install_recommends: False
+  with_flattened:
+    - 'samba'
+    - 'samba-common'
+    - 'samba-common-bin'
+
+- name: Create root Samba directories
+  file:
+    path: '/media/hdd'
+    state: 'directory'
+    owner: 'nobody'
+    group: 'nogroup'
+    mode: '0751'
+
+- name: Configure Samba
+  template:
+    src: 'smb.conf.j2'
+    dest: '/etc/samba/smb.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify: [ 'Check samba config' ]
+
+- name: Register Samba service
+  service: name=samba-ad-dc enabled=yes
