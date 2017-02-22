@@ -13,9 +13,17 @@
   notify: restart nginx
 
 - name: Copy download.kiwix.org vhost
-  copy: src=download.kiwix.org dest=/etc/nginx/sites-available/download.kiwix.org backup=yes
+  copy: src=download.kiwix.org dest=/etc/nginx/sites-available/download.kiwix.org
   notify: restart nginx
 
 - name: Enable Virtual host
   file: src=/etc/nginx/sites-available/download.kiwix.org dest=/etc/nginx/sites-enabled/download.kiwix.org state=link
+  notify: restart nginx
+
+- name: Copy download.kiwix.org vhost
+  copy: src=catalog.yohanboniface.me dest=/etc/nginx/sites-available/catalog.yohanboniface.me
+  notify: restart nginx
+
+- name: Enable Virtual host
+  file: src=/etc/nginx/sites-available/catalog.yohanboniface.me dest=/etc/nginx/sites-enabled/catalog.yohanboniface.me state=link
   notify: restart nginx
