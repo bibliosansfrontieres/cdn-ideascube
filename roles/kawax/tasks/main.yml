@@ -2,6 +2,7 @@
 - name: Install kawax script
   get_url: url=https://github.com/ideascube/kawax-scripts/raw/master/kawax
     dest=/usr/local/bin/kawax
+    mode=755
 
 - cron:
     name: "Update catalog and download zim from kiwix"
