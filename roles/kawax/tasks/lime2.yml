@@ -1,0 +1,6 @@
+---
+- name: Remove /srv/ directory to link it to HDD
+  file: path=/srv/ state=absent
+
+- name: Symlink /srv/ to external HDD
+  file: src=/media/hdd/ dest=/srv/ state=link
