@@ -2,5 +2,5 @@
 - name: Install Network-Manager
   apt: name=network-manager state=latest
 
-- name: Create entry to ansiblePull the rgit repository
+- name: Create entry to ansiblePull the git repository
   template: src=ansiblePull.j2 dest=/etc/NetworkManager/dispatcher.d/ansiblePull
