@@ -2,5 +2,11 @@
 - name: Install Network-Manager
   apt: name=network-manager state=latest
 
-- name: Create entry to ansiblePull the git repository
-  template: src=ansiblePull.j2 dest=/etc/NetworkManager/dispatcher.d/ansiblePull
+- name: Copy file to dispatcher to clone and execute KoomBook-doctor repository
+  template: src=01ansiblePull.j2 dest=/etc/NetworkManager/dispatcher.d/01ansiblePull
+
+- name: Copy file to dispatcher to auto Update Content From Syno
+  template: src=02autoUpdateContentFromSyno.j2 dest=/etc/NetworkManager/dispatcher.d/02autoUpdateContentFromSyno
+
+- name: Copy file to dispatcher to auto update KoomBook-doctor content
+  template: src=03autoUpdateContent.j2 dest=/etc/NetworkManager/dispatcher.d/03autoUpdateContent
