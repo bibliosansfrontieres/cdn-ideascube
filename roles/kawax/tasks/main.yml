@@ -8,7 +8,7 @@
     name: "Update catalog and download zim from kiwix"
     minute: "0"
     hour: "3"
-    job: "/usr/local/bin/kawax update_catalogs && /usr/local/bin/kawax rsync_kiwix > /dev/null"
+    job: "/usr/local/bin/kawax update_catalogs && /usr/local/bin/kawax extract_urls && /usr/local/bin/kawax rsync_kiwix >> /var/log/kawax.log 2>&1"
 
 - name: Test if a fex file exist, if yes, the device is an Olimex
   stat: path=/boot/bin/lime2.bin
