@@ -1,6 +1,6 @@
 ---
 - name: Ensure the HDD mountpoint exists
-  file: path=/media/hdd state=directory mode=0755
+  file: path=/media/hdd state=directory mode=0751 owner='nobody' group='nogroup'
   when: sda1.stat.isblk == True 
 
 - name: Mount /dev/sda1
@@ -47,4 +47,3 @@
 - name: Convert DTS file to DTB
   command: dtc -I dts -O dtb /boot/dtb/sun7i-a20-olinuxino-lime2.dts -o /boot/dtb/sun7i-a20-olinuxino-lime2.dtb
   when: ansible_kernel | version_compare('4', '>')
-  
