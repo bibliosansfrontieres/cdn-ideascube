@@ -57,6 +57,7 @@
    - tree
    - screen
    - iftop
+   - iotop
    - tmux
    - mtr-tiny
    - libwww-perl
@@ -66,6 +67,7 @@
    - sqlite3
    - elinks
    - avahi-daemon
+   - mosh
 
 - name: Upgrade pip to the latest version
   pip: name=pip state=latest
