@@ -6,5 +6,5 @@
 
 - name: Reload samba
   service:
-    name: samba
+    name: smbd
     state: 'reloaded'
