@@ -27,3 +27,19 @@
 - name: Enable Virtual host
   file: src=/etc/nginx/sites-available/catalog.yohanboniface.me dest=/etc/nginx/sites-enabled/catalog.yohanboniface.me state=link
   notify: restart nginx
+
+- name: Copy api.bsfcampus.org vhost
+  copy: src=api.bsfcampus.org dest=/etc/nginx/sites-available/api.bsfcampus.org
+  notify: restart nginx
+
+- name: Enable Virtual host
+  file: src=/etc/nginx/sites-available/api.bsfcampus.org dest=/etc/nginx/sites-enabled/api.bsfcampus.org state=link
+  notify: restart nginx
+
+- name: Copy mook-api.bibliosansfrontieres.fr vhost
+  copy: src=mook-api.bibliosansfrontieres.fr dest=/etc/nginx/sites-available/mook-api.bibliosansfrontieres.fr
+  notify: restart nginx
+
+- name: Enable Virtual host
+  file: src=/etc/nginx/sites-available/mook-api.bibliosansfrontieres.fr dest=/etc/nginx/sites-enabled/mook-api.bibliosansfrontieres.fr state=link
+  notify: restart nginx
