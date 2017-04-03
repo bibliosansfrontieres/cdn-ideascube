@@ -9,3 +9,6 @@
     minute: "0"
     hour: "3"
     job: "/usr/local/bin/kawax update_catalogs && /usr/local/bin/kawax extract_urls && /usr/local/bin/kawax rsync_kiwix >> /var/log/kawax.log 2>&1"
+
+- name: Copy tools scripts 
+  copy: src=sha256sumTest.sh dest=/home/ideascube/sha256sumTest.sh mode=755
