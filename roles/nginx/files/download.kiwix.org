@@ -2,7 +2,7 @@ server {
         listen 80 default_server;
         listen [::]:80 default_server;
 
-        root /media/hdd/kawax/download.kiwix.org/;
+        root /srv/kawax/download.kiwix.org/;
         autoindex on;
         index index.html index.htm;
         server_name download.kiwix.org;

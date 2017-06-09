@@ -2,7 +2,7 @@ server {
         listen 80;
         listen [::]:80;
 
-        root /media/hdd/mook/koombookedu/;
+        root /srv/mook/koombookedu/;
         autoindex on;
         index index.html index.htm;
         server_name mook-api.bibliosansfrontieres.fr;
