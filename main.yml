@@ -8,6 +8,7 @@
     - nginx
     - samba
     - kawax
+    - tinc-dynamic
 
   post_tasks:
     - name: Set back rights on /srv/
