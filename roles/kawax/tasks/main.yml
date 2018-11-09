@@ -1,6 +1,6 @@
 ---
 - name: Install kawax script
-  get_url: url=https://github.com/ideascube/kawax-scripts/raw/master/kawax
+  get_url: url=https://github.com/bibliosansfrontieres/kawax-scripts/raw/master/kawax
     dest=/usr/local/bin/kawax
     mode=755
 
@@ -8,7 +8,7 @@
     name: "Update catalog and download zim from kiwix"
     minute: "0"
     hour: "3"
-    job: "/usr/local/bin/kawax update_catalogs && /usr/local/bin/kawax extract_urls && /usr/local/bin/kawax rsync_kiwix >> /var/log/kawax.log 2>&1"
+    job: "/usr/local/bin/kawax all >> /var/log/kawax.log 2>&1"
 
-- name: Copy tools scripts 
+- name: Copy tools scripts
   copy: src=sha256sumTest.sh dest=/home/ideascube/sha256sumTest.sh mode=755
