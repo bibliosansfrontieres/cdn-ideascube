@@ -8,9 +8,9 @@
     state: absent
   notify: restart nginx
 
-- name: Upload nginx.conf
-  copy: src=nginx.conf dest=/etc/nginx/nginx.conf backup=yes
-  notify: restart nginx
+# - name: Upload nginx.conf
+#   copy: src=nginx.conf dest=/etc/nginx/nginx.conf backup=yes
+#   notify: restart nginx
 
 - name: Copy download.kiwix.org vhost
   copy: src=download.kiwix.org dest=/etc/nginx/sites-available/download.kiwix.org
@@ -20,7 +20,15 @@
   file: src=/etc/nginx/sites-available/download.kiwix.org dest=/etc/nginx/sites-enabled/download.kiwix.org state=link
   notify: restart nginx
 
-- name: Copy download.kiwix.org vhost
+- name: Copy packages.ideascube.org vhost
+  copy: src=packages.ideascube.org dest=/etc/nginx/sites-available/packages.ideascube.org
+  notify: restart nginx
+
+- name: Enable Virtual host
+  file: src=/etc/nginx/sites-available/packages.ideascube.org dest=/etc/nginx/sites-enabled/packages.ideascube.org state=link
+  notify: restart nginx
+
+- name: Copy catalog.yohanboniface.me
   copy: src=catalog.yohanboniface.me dest=/etc/nginx/sites-available/catalog.yohanboniface.me
   notify: restart nginx
 
