@@ -1,7 +1,7 @@
 [global]
 workgroup = WORKGROUP
 server string = Samba Server %v
-netbios name = {{ hostname }}
+netbios name = Kawax
 security = user
 map to guest = bad user
 dns proxy = no
@@ -16,8 +16,16 @@ guest ok = yes
 read only = yes
 force user = nobody
 
+[kolibri]
+path = "/srv/kolibri/"
+browsable =yes
+writable = no
+guest ok = yes
+read only = yes
+force user = nobody
+
 [kalite]
-path = "/srv/kalite"
+path = "/srv/kalite/"
 browsable =yes
 writable = no
 guest ok = yes
@@ -38,4 +46,12 @@ browsable =yes
 writable = no
 guest ok = yes
 read only = yes
+force user = nobody
+
+[offline_website]
+path = "/srv/offline_website/"
+browsable =yes
+writable = yes
+guest ok = yes
+read only = no
 force user = nobody
