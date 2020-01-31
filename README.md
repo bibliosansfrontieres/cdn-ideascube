@@ -29,7 +29,7 @@ ansible-playbook -i hosts -l olimex -u root main.yml --extra-vars "country=franc
 or
 
 ```
-curl -sfL https://go.sh | bash -s -- --country france --project_name bib
+curl -sfL https://github.com/bibliosansfrontieres/cdn-ideascube/raw/master/go.sh | bash -s -- --country france --project_name bib
 ```
 
 Finally autorize synchronization on master syncthing server. 
