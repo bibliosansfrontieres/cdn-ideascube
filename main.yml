@@ -2,7 +2,7 @@
 - hosts: all
 
   roles:
-    # - system
+    - system
     - nginx
     - samba
     - { role: 'syncthing', tags: 'syncthing' }
