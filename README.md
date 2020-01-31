@@ -1,8 +1,10 @@
 # BSF local CDN server
 
-Is a cache server that synchronize remote content locally to make it available to device such as Ideascube server. 
+Is a cache server that synchronize remote content locally to make it available to device such as Ideascube server.
 
-## Installation 
+ 
+## Installation
+
 
 1. Download the [last version](https://www.armbian.com/olimex-lime-2/) of Armbian (Debian version), currently buster.
 2. Burn an SD card and insert it on an OLIMEX Lime 2
