@@ -99,4 +99,4 @@ cd $ANSIBLECAP_PATH
 
 echo -e "[+] Start configuration..."
 
-$ANSIBLE_BIN --purge -C $GIT_RELEASE_TAG -d $ANSIBLECAP_PATH -i hosts -U $GIT_REPO_URL main.yml --extra-vars "country=$COUNTRY project_name=$PROJECT"
+$ANSIBLE_BIN --purge -C $BRANCH -d $ANSIBLECAP_PATH -i hosts -U $GIT_REPO_URL main.yml --extra-vars "country=$COUNTRY project_name=$PROJECT"
