@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ANSIBLECAP_PATH="/var/lib/ansible/local"
-GIT_REPO_URL="https://github.com/ideascube/koombook-doctor.git"
+GIT_REPO_URL="https://github.com/bibliosansfrontieres/cdn-ideascube.git"
 ANSIBLE_BIN="/usr/bin/ansible-pull"
 ANSIBLE_LOGS="/var/log/ansible-pull.log"
 ANSIBLE_ETC="/etc/ansible/facts.d/"
