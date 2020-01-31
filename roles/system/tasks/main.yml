@@ -1,140 +1,114 @@
 ---
-- name: Drop a complete source.list
-  copy: src=source.list dest=/etc/apt/sources.list
-
-- name: Run apt-get update  
-  shell: apt-get update ; echo
-  register: result
+- name: Update and upgrade apt packages
+  become: true
+  apt:
+    upgrade: yes
+    update_cache: yes
+    cache_valid_time: 86400
 
 - name: Fix broken package
+  become: true
   shell: dpkg --configure -a
-  when: "'dpkg --configure -a' in result.stderr"
 
-- name: Remove unwanted packages before upgrading
-  apt: name={{ item }} state=absent purge=yes
-  with_items:
-   - apache2
-   - apache2-mpm-worker
-   - apache2-utils
-   - apache2.2-bin
-   - apache2.2-common
-   - btrfs-tools
-   - figlet
-   - toilet
-   - bluez
-   - fping
-   - stress
-   - iperf
-   - iotop
-   - lirc
-   - apt-listchanges
-   - clipit
-   - sslh
+- name: Install required package
+  become: true
+  apt:
+    name: "{{ packages }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+  vars:
+    packages:
+      - vim
+      - locate
+      - unzip
+      - hdparm
+      - tree
+      - screen
+      - iftop
+      - iotop
+      - tmux
+      - mtr-tiny
+      - libwww-perl
+      - httpie
+      - lshw
+      - hwinfo
+      - elinks
+      - avahi-daemon
+      - avahi-utils
+      - mosh
 
-- name: Install all required package
-  apt: name={{ item }} state=latest update_cache=yes
-  with_items:
-   - python-pip
-   - python-dev
-   - python-setuptools
-   - python-virtualenv
-   - virtualenv
-   - git
-   - sudo
-   - lsb-release
-   - vim
-   - locate
-   - git
-   - unzip
-   - bash-completion
-   - aptitude
-   - ntpdate
-   - fake-hwclock
-   - hdparm
-   - ncurses-term
-   - libffi-dev
-   - libssl-dev
-   - tree
-   - screen
-   - iftop
-   - iotop
-   - tmux
-   - mtr-tiny
-   - libwww-perl
-   - httpie
-   - lshw
-   - hwinfo
-   - sqlite3
-   - elinks
-   - avahi-daemon
-   - mosh
+- name: Ensure locale en_US.UTF-8 locale is present
+  locale_gen:
+    name: en_US.UTF-8
+    state: present
 
-- name: Upgrade pip to the latest version
-  pip: name=pip state=latest
+- block:
+  - name: Set a server name with hostnamectl
+    shell: hostnamectl set-hostname {{ server_name }}
 
-- name: Stat /dev/sda1 for later use on Koombooks
-  stat: path=/dev/sda1
-  register: sda1
+  rescue:
+  - name: Set a server name manually
+    shell: echo {{ server_name }} > /etc/hostname
 
-- name: Test if a fex file exist, if yes, the device is an Olimex
-  stat: path=/boot/bin/lime2.bin
-  register: fex_file
-  when: ansible_architecture == 'armhf'
-    or ansible_architecture == 'armv7l'
 
-- name: Test if a fex file exist, if yes, the device is an Olimex
-  stat: path=/boot/script.bin
-  register: fex_file2
-  when: ansible_architecture == 'armhf'
-    or ansible_architecture == 'armv7l'
+- name: Enable systemd-timesyncd
+  command: timedatectl set-ntp true
 
-- include: lime2.yml
-  when: (fex_file.stat.exists is defined and fex_file.stat.exists 
-    or fex_file2.stat.exists is defined and fex_file2.stat.exists)
-    and (ansible_architecture == 'armhf' 
-    or ansible_architecture == 'armv7l')
+- name: Remove the existing localtime file
+  file:
+    path: /etc/localtime
+    state: absent
 
-- name: List services to restart (1/2)
-  shell: checkrestart | grep ^service | awk '{print $2}'
-  register: services
-  changed_when: False
+- name: Set a new localtime file corresponding to the timezone
+  file:
+    src: /usr/share/zoneinfo/{{ timezone }}
+    dest: /etc/localtime
+    state: link
+    force: yes
 
-- name: Upgrade packages
-  apt: upgrade=safe
+- name: Set timezone variables
+  copy:
+    content: "{{ timezone }}"
+    dest: /etc/timezone
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify: update timezone
 
-- name: Drop hosts file on device for cache_machine
-  template: src=hosts_cache_machine.j2 dest=/etc/hosts
-  when: firststart.stat.exists == False or firststart is undefined
+- include: storage.yml
+  tags: storage
 
-- name: Give an hostname
-  hostname: name={{ hostname }}
+- include: user_management.yml
+  tags: user_management
 
-- name: Set up authorized_keys for root user
-  authorized_key: user=root key="{{ item }}"
-  with_file:
-    - florian.pub
-    - gregoire.pub
-    - tom.pub
-    - steven.pub
+- name: Check if ssh key is present
+  stat: path=/root/.ssh/{{server_name}}.pub
+  register: ssh_key
+  tags: ssh_config
 
-- name: Add locales
-  locale_gen: name="{{ item }}" state=present
-  with_items:
-  - fr_FR.UTF-8
-  - en_US.UTF-8
-  - en_GB.UTF-8
+- include: ssh_config.yml
+  tags: ssh_config
+  when: ssh_key.stat.exists == False
 
-- name: Copy .bashrc for root
-  copy: src=bashrc dest=/root/.bashrc owner=root
+- include: logs.yml
+  tags: logs
 
-- name: Copy the global vimrc file
-  copy: src=vimrc.local dest=/etc/vim/vimrc.local owner=root mode=0644
+- name: Add cdn.ideascube.local as an Avahi alias
+  blockinfile:
+    dest: /etc/systemd/system/avahi-alias@.service
+    create: yes
+    block: |
+      [Unit]
+      Description=Publish %I as alias for %H.local via mdns
+      Wants=avahi-daemon.service network-online.target
+      After=avahi-daemon.service network-online.target
 
-- name: Create local directory to work from
-  file: path=/var/lib/ansible/local state=directory owner=root group=root mode=0751
+      [Service]
+      Type=simple
+      ExecStart=/bin/bash -c "/usr/bin/avahi-publish -a -R %I $(avahi-resolve -4 -n %H.local | cut -f 2)"
 
-- name: Create ansible hosts directory to work from
-  file: path=/etc/ansible/ state=directory owner=root group=root mode=0751
-
-- name: Copy ansible inventory file to client
-  copy: src=hosts dest=/etc/ansible/hosts
+      [Install]
+      WantedBy=multi-user.target
+  notify: publish avahi alias

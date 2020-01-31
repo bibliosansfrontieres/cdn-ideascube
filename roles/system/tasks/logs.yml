@@ -1,0 +1,54 @@
+---
+- name: Create probably missing log folders on external HDD
+  file:
+    path: "/media/hdd/log/{{ item }}"
+    mode: 0775
+    state: directory
+  with_items:
+    - nginx
+    - uwsgi
+
+- name: Configure logrotate to handle our custom logs.
+  template:
+    src: "{{ item.src }}"
+    dest: /etc/logrotate.d/"{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - src: 000-dateext-for-all.j2
+      dest: 000-dateext-for-all
+    - src: ansible-pull.logrotate.j2
+      dest: ansible-pull
+    - src: dpkg-list.logrotate.j2
+      dest: dpkg-list
+    - src: pip-freeze.logrotate.j2
+      dest: pip-freeze
+    - src: hdw-info.logrotate.j2
+      dest: hdw-info
+
+- name: copy hdw info script
+  copy:
+    src: hdw_info.sh
+    dest: /usr/local/bin/hdw_info.sh
+    mode: 755
+
+- name: Copy push_log.sh
+  template:
+    src: push_log.sh.j2
+    dest: /etc/NetworkManager/dispatcher.d/60-push-log
+    mode: 755
+
+- name: copy APT User-Agent configuration
+  copy:
+    src: apt-user-agent.conf
+    dest: /etc/apt/apt.conf.d/99useragent
+    mode: 755
+
+- name: Ensure Anacron will run on battery
+  lineinfile:
+    dest: /etc/default/anacron
+    regexp: '^ANACRON_RUN_ON_BATTERY_POWER'
+    line: 'ANACRON_RUN_ON_BATTERY_POWER=yes'
+    state: present
+    create: yes

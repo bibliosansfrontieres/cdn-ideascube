@@ -8,50 +8,18 @@ dns proxy = no
 
 #============================ Share Definitions ==============================
 
-[content]
-path = "/srv/synology/Gestion des contenus"
-browsable =yes
-writable = no
-guest ok = yes
-read only = yes
-force user = nobody
-
-[kolibri]
-path = "/srv/kolibri/"
-browsable =yes
-writable = no
-guest ok = yes
-read only = yes
-force user = nobody
-
-[kalite]
-path = "/srv/kalite/"
-browsable =yes
-writable = no
-guest ok = yes
-read only = yes
-force user = nobody
-
-[zim]
-path = "/srv/kawax/"
-browsable =yes
-writable = no
-guest ok = yes
-read only = yes
-force user = nobody
-
 [packages]
-path = "/srv/packages/"
+path = "/media/hdd/omeka/"
 browsable =yes
 writable = no
 guest ok = yes
 read only = yes
 force user = nobody
 
-[offline_website]
-path = "/srv/offline_website/"
+[kiwix]
+path = "/media/hdd/kiwix/"
 browsable =yes
-writable = yes
+writable = no
 guest ok = yes
-read only = no
+read only = yes
 force user = nobody

@@ -1,0 +1,119 @@
+---
+- name: Add the Syncthing release PGP keys
+  shell: curl -s https://syncthing.net/release-key.txt | sudo apt-key add -
+
+- name: Add Syncthing repository
+  apt_repository:
+    repo: deb https://apt.syncthing.net/ syncthing stable
+    state: present
+    update_cache: yes
+
+- name: Install Syncthing
+  apt:
+    name: syncthing
+    state: present
+
+- name: Install systemd unit file
+  copy:
+    src: syncthing-resume.service
+    dest: /etc/systemd/system/syncthing-resume.service
+
+- name: Install systemd unit file
+  template:
+    src: syncthing.service.j2
+    dest: /etc/systemd/system/syncthing.service
+  notify: restart syncthing
+
+- name: Enable unit syncthing-resume.service
+  service:
+    name: syncthing-resume.service
+    enabled: yes
+
+- name: Enable unit syncthing.service
+  service:
+    name: syncthing.service
+    enabled: yes
+
+- name: Verify if config.xml exist
+  stat:
+    path: /home/{{username}}/.config/syncthing/config.xml
+  register: config_file
+
+- name: Generate config.xml file and get device ID
+  become: true
+  become_user: "{{ username }}"
+  shell: syncthing -generate="/home/{{username}}/.config/syncthing" | grep "Device ID" | cut -d " " -f5
+  register: device_id
+  when: config_file.stat.exists == False
+
+- name: waiting for config file (takes some time)
+  become: true
+  become_user: "{{ username }}"
+  wait_for: path=/home/{{username}}/.config/syncthing/config.xml
+  when: config_file.stat.exists == False
+
+- name: Add syncthing folder to synchronize
+  blockinfile:
+    dest: /home/{{username}}/.config/syncthing/config.xml
+    insertafter: "^    </folder>"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK {{ item.label }}"
+    block: |
+          <folder id="{{item.id}}" label="{{item.label}}" path="{{item.path}}" type="receiveonly" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
+            <filesystemType>basic</filesystemType>
+            <device id="{{kawax_id}}"></device>
+            <device id="{{ device_id.stdout }}" introducedBy=""></device>
+            <minDiskFree unit="%">1</minDiskFree>
+            <versioning></versioning>
+            <copiers>0</copiers>
+            <pullerMaxPendingKiB>0</pullerMaxPendingKiB>
+            <hashers>0</hashers>
+            <order>random</order>
+            <ignoreDelete>false</ignoreDelete>
+            <scanProgressIntervalS>0</scanProgressIntervalS>
+            <pullerPauseS>0</pullerPauseS>
+            <maxConflicts>10</maxConflicts>
+            <disableSparseFiles>false</disableSparseFiles>
+            <disableTempIndexes>false</disableTempIndexes>
+            <paused>false</paused>
+            <weakHashThresholdPct>25</weakHashThresholdPct>
+            <markerName>.stfolder</markerName>
+            <copyOwnershipFromParent>false</copyOwnershipFromParent>
+            <modTimeWindowS>0</modTimeWindowS>
+          </folder>
+  loop: "{{ syncthing_config }}"
+  notify: restart syncthing
+  when: config_file.stat.exists == False
+
+- name: Add device to synchronize with
+  blockinfile:
+    dest: /home/{{username}}/.config/syncthing/config.xml
+    insertafter: "^    </device>"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK {{ item.label }}"
+    block: |
+            <device id="{{ item.key }}" name="{{item.label}}" compression="metadata" introducer="true" skipIntroductionRemovals="false" introducedBy="">
+              <address>dynamic</address>
+              <address>tcp://{{item.ip_address}}:{{item.port}}</address>
+              <paused>false</paused>
+            </device>
+  loop: "{{ syncthing_master_id_device }}"
+  notify: restart syncthing
+  when: config_file.stat.exists == False
+
+- name: Autorize connexion from Web UI
+  lineinfile: 
+    dest: /home/{{username}}/.config/syncthing/config.xml
+    regexp: '<address>127.0.0.1:8384</address>'
+    line: '<address>{{syncthing_web_ui}}</address>'
+    state: present
+  notify: restart syncthing
+  when: config_file.stat.exists == False
+
+- name: Create sync directory
+  file: 
+    path: "{{ item.path }}/.stfolder"
+    state: directory
+    owner: "{{username}}"
+    group: "{{username}}"
+    recurse: yes
+  with_items:
+    - "{{ syncthing_config }}"

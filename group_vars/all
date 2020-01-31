@@ -1,5 +1,11 @@
 ---
-#System
-timezone: "Europe/Paris"
+username: cdn
+password: $6$YcJS1HjRAv/$1bUosoPalzHEvfpx71UhnG6vCeckTGbA5U1i6UpA8X21Jrv7fYRPyNrq/YWuiBp3xQWd5kRRhrKKPHcbTkkfQ/
+central_server: tincmaster.wan.bsf-intranet.org
+filer_bsf: http://filer.bsf-intranet.org
 bsf_gateway: "10.10.9.1"
-hostname: "koombook-doctor"
+country: france
+project_name: noname
+server_name: "cdn-{{country}}-{{project_name}}"
+cdn_name: cdn.ideascube
+timezone: Europe/Paris

@@ -1,53 +1,37 @@
 ---
 - name: Install nginx web server
-  apt: name=nginx state=latest force=yes
+  apt: 
+    name: nginx
+    state: latest
+    force: yes
 
-- name: Remove default nginx vhost config file (if configured).
-  file:
-    path: /etc/nginx/sites-enabled/default
-    state: absent
+- name: Copy vhost
+  copy: 
+    src: "{{item}}"
+    dest: /etc/nginx/sites-available/{{item}}
+  with_items:
+    - download.kiwix.org
+    - packages.ideascube.org
   notify: restart nginx
 
-# - name: Upload nginx.conf
-#   copy: src=nginx.conf dest=/etc/nginx/nginx.conf backup=yes
-#   notify: restart nginx
-
-- name: Copy download.kiwix.org vhost
-  copy: src=download.kiwix.org dest=/etc/nginx/sites-available/download.kiwix.org
+- name: Copy vhost cdn splashscreen
+  template: 
+    src: cdn.ideascube.local.j2
+    dest: /etc/nginx/sites-available/{{server_name}}.local
   notify: restart nginx
 
-- name: Enable Virtual host
-  file: src=/etc/nginx/sites-available/download.kiwix.org dest=/etc/nginx/sites-enabled/download.kiwix.org state=link
+- name: Enable vhost
+  file: 
+    src: /etc/nginx/sites-available/{{item}}
+    dest: /etc/nginx/sites-enabled/{{item}}
+    state: link
+  with_items:
+    - download.kiwix.org
+    - packages.ideascube.org
+    - "{{ server_name }}.local"
   notify: restart nginx
 
-- name: Copy packages.ideascube.org vhost
-  copy: src=packages.ideascube.org dest=/etc/nginx/sites-available/packages.ideascube.org
-  notify: restart nginx
-
-- name: Enable Virtual host
-  file: src=/etc/nginx/sites-available/packages.ideascube.org dest=/etc/nginx/sites-enabled/packages.ideascube.org state=link
-  notify: restart nginx
-
-- name: Copy catalog.yohanboniface.me
-  copy: src=catalog.yohanboniface.me dest=/etc/nginx/sites-available/catalog.yohanboniface.me
-  notify: restart nginx
-
-- name: Enable Virtual host
-  file: src=/etc/nginx/sites-available/catalog.yohanboniface.me dest=/etc/nginx/sites-enabled/catalog.yohanboniface.me state=link
-  notify: restart nginx
-
-- name: Copy api.bsfcampus.org vhost
-  copy: src=api.bsfcampus.org dest=/etc/nginx/sites-available/api.bsfcampus.org
-  notify: restart nginx
-
-- name: Enable Virtual host
-  file: src=/etc/nginx/sites-available/api.bsfcampus.org dest=/etc/nginx/sites-enabled/api.bsfcampus.org state=link
-  notify: restart nginx
-
-- name: Copy mook-api.bibliosansfrontieres.fr vhost
-  copy: src=mook-api.bibliosansfrontieres.fr dest=/etc/nginx/sites-available/mook-api.bibliosansfrontieres.fr
-  notify: restart nginx
-
-- name: Enable Virtual host
-  file: src=/etc/nginx/sites-available/mook-api.bibliosansfrontieres.fr dest=/etc/nginx/sites-enabled/mook-api.bibliosansfrontieres.fr state=link
-  notify: restart nginx
+- name: Copy welcome page
+  template: 
+    src: welcome-cdn.html.j2
+    dest: /var/www/html/index.html

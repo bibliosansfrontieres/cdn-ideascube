@@ -2,6 +2,13 @@
 
 - name: update timezone
   command: dpkg-reconfigure --frontend noninteractive tzdata
-
+  
 - name: Reboot device
   command: reboot
+
+- name: publish avahi alias
+  systemd:
+    name: avahi-alias@{{cdn_name}}.local.service
+    state: started
+    enabled: yes
+    daemon_reload: yes

@@ -1,0 +1,21 @@
+---
+- name: Ensure the HDD mountpoint exists
+  file:
+    path: /media/hdd
+    state: directory
+    mode: 0755
+
+- name: Copy mount units to systemd folder
+  copy:
+    src: media-hdd.mount
+    dest: /etc/systemd/system/media-hdd.mount
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable mount point
+  systemd:
+    name: media-hdd.mount
+    state: started
+    enabled: yes
+    daemon_reload: yes

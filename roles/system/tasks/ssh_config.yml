@@ -1,0 +1,48 @@
+---
+- name: Reconfigure openssh-server
+  shell: rm -f /etc/ssh/*key* && dpkg-reconfigure openssh-server
+
+- name: Make sure central_server pubkey is in known_hosts
+  copy:
+    src: known_hosts
+    dest: /root/.ssh/known_hosts
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Download ansiblecap default ssh keys
+  get_url:
+    url: http://ansiblecapsshkey.kawax.cinema.montreuil.wan.bsf-intranet.org/{{item}}
+    dest: /root/.ssh/{{item}}
+    owner: root
+    group: root
+    mode: 0600
+  with_items:
+    - id_rsa
+    - id_rsa.pub
+  register: got_the_key
+  when: bsf_local_network.state|default(omit) == "present"
+
+- name: Generate a new ssh key
+  shell: ssh-keygen -t rsa -b 4096 -C "{{ server_name }}" -f /root/.ssh/{{ server_name }} -N ""
+  ignore_errors: yes
+
+- name: Push new ssh key on central server
+  shell: cat /root/.ssh/"{{ server_name }}".pub | ssh -i /root/.ssh/id_rsa root@tincmaster.wan.bsf-intranet.org "cat >> /home/ansible/.ssh/authorized_keys"
+  when: got_the_key.changed == True
+
+- name: Remove ansiblecap default ssh keys
+  file:
+    path: /root/.ssh/{{item}}
+    state: absent
+  with_items:
+    - id_rsa
+    - id_rsa.pub
+
+- name: Copy ssh config file
+  template:
+    src: ssh_config.j2
+    dest: /root/.ssh/config
+    owner: root
+    group: root
+    mode: 0644

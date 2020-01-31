@@ -1,15 +1,9 @@
 ---
-- hosts: localhost
-# - hosts: SystemPushInstall
+- hosts: all
 
   roles:
-    - network-manager
-    - system
+    # - system
     - nginx
     - samba
-    - kawax
-    - tinc-dynamic
-
-  post_tasks:
-    - name: Set back rights on /srv/
-      file: path=/srv/ state=directory owner=nobody group=nogroup recurse=yes
+    - { role: 'syncthing', tags: 'syncthing' }
+    - tinc

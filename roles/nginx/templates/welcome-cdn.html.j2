@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome {{ansible_hostname}}.local</title>
+    <style>
+      body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Welcome to {{ansible_hostname}}</h1>
+    <p>This webserver is a local CDN for Ideascube devices.</p>
+
+    <p align="center"><a href="http://{{ server_name }}.local">Browse CDN</a></p>
+    <p align="center"><a href="http://{{ server_name }}.local:8384">Browse Syncthing Web UI</a></p>
+
+    <p>If on Windows OS or Android the link http://{{ server_name }}.local might not work. <br />
+    Add to your OS host file : <b>ip_address_of_this_server {{cdn_name}}.local</b></p>
+
+  </body>
+</html>
