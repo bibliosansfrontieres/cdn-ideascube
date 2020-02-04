@@ -2,7 +2,7 @@ server {
         listen 80;
         listen [::]:80;
 
-        root /media/hdd/;
+        root {{ storage }};
         autoindex on;
         index index.html index.htm;
         server_name packages.ideascube.org;

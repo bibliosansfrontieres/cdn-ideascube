@@ -9,3 +9,5 @@ project_name: noname
 server_name: "cdn-{{country}}-{{project_name}}"
 cdn_name: cdn-ideascube
 timezone: Europe/Paris
+storage: /data
+external_hdd: false

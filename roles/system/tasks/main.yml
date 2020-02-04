@@ -1,4 +1,14 @@
 ---
+- name: "Does the device works on eMMC and external HDD ?"
+  set_fact:
+    external_hdd: true
+  when: ansible_devices.sda.partitions.sda1.uuid | default(false) and
+        ansible_devices.mmcblk0.partitions.mmcblk0p1.uuid | default(false)
+
+- name: test
+  debug: msg="External HDD has been detected. /dev/sda1 will be mounted to store the data. Size {{ ansible_devices.sda.partitions.sda1.size }}"
+  when : external_hdd
+
 - name: Update and upgrade apt packages
   become: true
   apt:
@@ -51,6 +61,15 @@
   - name: Set a server name manually
     shell: echo {{ server_name }} > /etc/hostname
 
+  always:
+  - name: reload ansible_hostname
+    setup: filter=ansible_hostname
+
+- name: Set name server in hosts file
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^127.0.0.1'
+    line: "127.0.0.1 localhost {{ server_name }}"
 
 - name: Enable systemd-timesyncd
   command: timedatectl set-ntp true
@@ -79,6 +98,7 @@
 
 - include: storage.yml
   tags: storage
+  when: external_hdd
 
 - include: user_management.yml
   tags: user_management

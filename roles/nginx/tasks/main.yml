@@ -6,8 +6,8 @@
     force: yes
 
 - name: Copy vhost
-  copy: 
-    src: "{{item}}"
+  template: 
+    src: "{{item}}.j2"
     dest: /etc/nginx/sites-available/{{item}}
   with_items:
     - download.kiwix.org

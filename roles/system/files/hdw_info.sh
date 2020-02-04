@@ -1,5 +1,5 @@
 #!/bin/bash
-FILE="/media/hdd/log/hdw_info.txt"
+FILE="/tmp/hdw_info.txt"
 echo "##################################" >> $FILE
 echo "#          lscpu                 #" >> $FILE
 echo "##################################" >> $FILE

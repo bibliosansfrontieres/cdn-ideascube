@@ -1,7 +1,7 @@
 ---
 - name: Create probably missing log folders on external HDD
   file:
-    path: "/media/hdd/log/{{ item }}"
+    path: "{{ storage }}/log/{{ item }}"
     mode: 0775
     state: directory
   with_items:
@@ -24,8 +24,6 @@
       dest: dpkg-list
     - src: pip-freeze.logrotate.j2
       dest: pip-freeze
-    - src: hdw-info.logrotate.j2
-      dest: hdw-info
 
 - name: copy hdw info script
   copy:

@@ -1,13 +1,17 @@
 ---
+- name: "Change storage path"
+  set_fact:
+    storage: /media/hdd
+
 - name: Ensure the HDD mountpoint exists
   file:
-    path: /media/hdd
+    path: "{{ storage }}"
     state: directory
     mode: 0755
 
 - name: Copy mount units to systemd folder
-  copy:
-    src: media-hdd.mount
+  template:
+    src: media-hdd.mount.j2
     dest: /etc/systemd/system/media-hdd.mount
     owner: root
     group: root
