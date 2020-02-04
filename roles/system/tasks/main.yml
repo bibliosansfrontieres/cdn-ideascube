@@ -95,7 +95,7 @@
 - include: logs.yml
   tags: logs
 
-- name: Add cdn.ideascube.local as an Avahi alias
+- name: Add cdn-ideascube.local as an Avahi alias
   blockinfile:
     dest: /etc/systemd/system/avahi-alias.service
     create: yes
