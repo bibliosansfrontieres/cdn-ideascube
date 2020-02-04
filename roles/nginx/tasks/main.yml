@@ -39,5 +39,5 @@
 - name: Enable server_names_hash_bucket_size
   lineinfile: 
     dest: /etc/nginx/nginx.conf
-    regexp: '# server_names_hash_bucket_size 64;'
+    regexp: 'server_names_hash_bucket_size'
     line: 'server_names_hash_bucket_size 64;'
