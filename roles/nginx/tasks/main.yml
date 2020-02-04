@@ -35,3 +35,9 @@
   template: 
     src: welcome-cdn.html.j2
     dest: /var/www/html/index.html
+
+- name: Enable server_names_hash_bucket_size
+  lineinfile: 
+    dest: /etc/nginx/nginx.conf
+    regexp: '# server_names_hash_bucket_size 64;'
+    line: 'server_names_hash_bucket_size 64;'
