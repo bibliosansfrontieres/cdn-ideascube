@@ -7,5 +7,5 @@ bsf_gateway: "10.10.9.1"
 country: france
 project_name: noname
 server_name: "cdn-{{country}}-{{project_name}}"
-cdn_name: cdn.ideascube
+cdn_name: cdn-ideascube
 timezone: Europe/Paris
