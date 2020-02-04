@@ -97,17 +97,17 @@
 
 - name: Add cdn.ideascube.local as an Avahi alias
   blockinfile:
-    dest: /etc/systemd/system/avahi-alias@.service
+    dest: /etc/systemd/system/avahi-alias.service
     create: yes
     block: |
       [Unit]
-      Description=Publish %I as alias for %H.local via mdns
+      Description=Publish {{cdn_name}} as alias for {{server_name}}.local via mdns
       Wants=avahi-daemon.service network-online.target
       After=avahi-daemon.service network-online.target
 
       [Service]
       Type=simple
-      ExecStart=/bin/bash -c "/usr/bin/avahi-publish -a -R %I $(avahi-resolve -4 -n %H.local | cut -f 2)"
+      ExecStart=/bin/bash -c "/usr/bin/avahi-publish -a -R {{cdn_name}}.local $(avahi-resolve -4 -n {{server_name}}.local | cut -f 2)"
 
       [Install]
       WantedBy=multi-user.target

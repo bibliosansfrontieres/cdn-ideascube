@@ -8,7 +8,7 @@
 
 - name: publish avahi alias
   systemd:
-    name: avahi-alias@{{cdn_name}}.local.service
+    name: avahi-alias.service
     state: started
     enabled: yes
     daemon_reload: yes
