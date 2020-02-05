@@ -23,7 +23,7 @@ SSH access
 Launch configuration etheir with 
 
 ```
-ansible-playbook -i hosts -l olimex -u root main.yml --extra-vars "country=france project_name=bib"
+ansible-playbook -l olimex -u root main.yml --extra-vars "country=france project_name=bib"
 ```
 
 or
