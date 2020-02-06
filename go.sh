@@ -31,7 +31,7 @@ function install_ansible()
     internet_check
     echo -e "[+] Install ansible PPA... "
     echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" > /etc/apt/sources.list.d/ansible.list
-    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
     echo -e "[+] Update packages... "
     apt-get update --quiet --quiet
     apt-get install --quiet --quiet -y ansible git
