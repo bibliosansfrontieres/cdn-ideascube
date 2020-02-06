@@ -6,7 +6,7 @@ ANSIBLE_BIN="/usr/bin/ansible-pull"
 ANSIBLE_LOGS="/var/log/ansible-pull.log"
 ANSIBLE_ETC="/etc/ansible/facts.d/"
 TAGS=""
-BRANCH="master"
+BRANCH="${BRANCH:-master}"
 GIT_RELEASE_TAG="0.0.1"
 STORAGE=""
 
@@ -47,7 +47,7 @@ function clone_ansiblecube()
     echo -n "[+] Clone ansiblecap repo... "
     mkdir --mode 0755 -p ${ANSIBLECAP_PATH}
     cd ${ANSIBLECAP_PATH}/../
-    git clone ${GIT_REPO_URL} local
+    git clone --branch $BRANCH ${GIT_REPO_URL} local
 
     mkdir --mode 0755 -p ${ANSIBLE_ETC}
     cp ${ANSIBLECAP_PATH}/hosts /etc/ansible/hosts
