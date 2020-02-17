@@ -10,7 +10,7 @@
     src: "{{item}}.j2"
     dest: /etc/nginx/sites-available/{{item}}
   with_items:
-    - download.kiwix.org
+    - kiwix.ideascube.org
     - packages.ideascube.org
   notify: restart nginx
 
@@ -26,7 +26,7 @@
     dest: /etc/nginx/sites-enabled/{{item}}
     state: link
   with_items:
-    - download.kiwix.org
+    - kiwix.ideascube.org
     - packages.ideascube.org
     - "{{ server_name }}.local"
   notify: restart nginx
