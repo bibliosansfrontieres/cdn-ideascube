@@ -8,7 +8,7 @@ Is a cache server that synchronize remote content locally to make it available
 1. Download the [latest version](https://www.armbian.com/olimex-lime-2/) of
    Armbian (Debian version), currently Buster.
 2. Burn an SD card and insert it on an OLIMEX Lime 2
-3. Attach a big hard drive (~ 2Tb)
+3. Attach a big hard drive (~ 2Tb) with a `ext4` partition
 4. Grab a very good 5V / 2A power supply
 5. Power the board
 
