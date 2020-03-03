@@ -47,6 +47,7 @@
       - avahi-daemon
       - avahi-utils
       - mosh
+      - molly-guard
 
 - name: Ensure locale en_US.UTF-8 locale is present
   locale_gen:
