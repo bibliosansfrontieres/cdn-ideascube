@@ -34,7 +34,7 @@ function install_ansible()
     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
     echo -e "[+] Update packages... "
     apt-get update --quiet --quiet
-    apt-get install --quiet --quiet -y ansible git
+    apt-get install --quiet --quiet -y ansible git python-apt
     echo 'Done.'
 }
 
