@@ -116,5 +116,5 @@
     enabled: yes
     state: started
 
-- name: send the public key to central nodes
+- name: send the tinc public key to central nodes
   shell: rsync /etc/tinc/{{ vpn_name }}/hosts/{{device_tinc_name}}  {{ central_server }}:/ansible/tinc-{{ vpn_name }}/
