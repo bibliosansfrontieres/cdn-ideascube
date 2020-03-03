@@ -6,4 +6,4 @@
     - nginx
     - samba
     - { role: 'syncthing', tags: 'syncthing' }
-    - tinc
+    #- tinc
