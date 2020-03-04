@@ -28,7 +28,7 @@
   ignore_errors: yes
 
 - name: Push new ssh key on central server
-  shell: cat /root/.ssh/"{{ server_name }}".pub | ssh -i /root/.ssh/id_rsa root@tincmaster.wan.bsf-intranet.org "cat >> /home/ansible/.ssh/authorized_keys"
+  shell: cat /root/.ssh/"{{ server_name }}".pub | ssh -i /root/.ssh/id_rsa ansible@tincmaster.wan.bsf-intranet.org "cat >> .ssh/authorized_keys"
   when: got_the_key.changed == True
 
 - name: Remove ansiblecap default ssh keys
