@@ -17,48 +17,50 @@ STORAGE=""
 
 function internet_check()
 {
-    echo -e "[+] Check Internet connection... "
+    echo "[+] Check Internet connection..."
     if [[ ! `ping -q -c 2 github.com` ]]
     then
         echo "ERROR: Repository is unreachable, check your Internet connection." >&2
         exit 1
     fi
-    echo "Done."
+    echo "[+] ... connection is ok."
 }
 
 function install_ansible()
 {
     internet_check
-    echo -e "[+] Install ansible PPA... "
+    echo "[+] Install ansible PPA..."
     echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" > /etc/apt/sources.list.d/ansible.list
     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
-    echo -e "[+] Update packages... "
+    echo "[+] Update packages..."
     apt-get update --quiet --quiet
+    echo "[+] Install ansible and its requirements..."
     apt-get install --quiet --quiet -y ansible git python-apt
-    echo 'Done.'
+    echo '[+] ... ansible installed.'
 }
 
 function clone_ansiblecube()
 {
-    echo -n "[+] Checking for internet connectivity... "
     internet_check
-    echo 'Done.'
 
-    echo -n "[+] Clone ansiblecap repo... "
+    echo "[+] Clone cdn-ideascube repo..."
     mkdir --mode 0755 -p ${ANSIBLECAP_PATH}
     cd ${ANSIBLECAP_PATH}/../
     git clone ${GIT_REPO_URL} local
 
     mkdir --mode 0755 -p ${ANSIBLE_ETC}
     cp ${ANSIBLECAP_PATH}/hosts /etc/ansible/hosts
-    echo 'Done.'
+    echo '[+] ... cdn-ideascube repo cloned.'
 }
 
 [ -x ${ANSIBLE_BIN} ] || install_ansible
 [ -d ${ANSIBLECAP_PATH} ] || clone_ansiblecube
 
-echo "Checking file access" >> $ANSIBLE_LOGS
-[ $? -ne 0 ] && echo "No space left to write logs or permission problem, exiting." && exit 1
+echo "$( date ) go.sh" >> $ANSIBLE_LOGS
+[ $? -ne 0 ] && {
+    echo "No space left to write logs or permission problem, exiting." >&2
+    exit 1
+}
 
 
 while [[ $# -gt 0 ]]
@@ -97,6 +99,6 @@ done
 
 cd $ANSIBLECAP_PATH
 
-echo -e "[+] Start configuration..."
+echo "[+] Running the playbook..."
 
 $ANSIBLE_BIN --purge -C $BRANCH -d $ANSIBLECAP_PATH -i hosts -U $GIT_REPO_URL main.yml --extra-vars "country=$COUNTRY project_name=$PROJECT"
