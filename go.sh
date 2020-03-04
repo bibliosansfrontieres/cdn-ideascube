@@ -5,10 +5,7 @@ GIT_REPO_URL="https://github.com/bibliosansfrontieres/cdn-ideascube.git"
 ANSIBLE_BIN="/usr/bin/ansible-pull"
 ANSIBLE_LOGS="/var/log/ansible-pull.log"
 ANSIBLE_ETC="/etc/ansible/facts.d/"
-TAGS=""
 BRANCH="master"
-GIT_RELEASE_TAG="0.0.1"
-STORAGE=""
 
 [ $EUID -eq 0 ] || {
     echo "Error: you have to be root to run this script." >&2
@@ -18,7 +15,7 @@ STORAGE=""
 function internet_check()
 {
     echo "[+] Check Internet connection..."
-    if [[ ! `ping -q -c 2 github.com` ]]
+    if [[ ! $( ping -q -c 2 github.com ) ]]
     then
         echo "ERROR: Repository is unreachable, check your Internet connection." >&2
         exit 1
