@@ -1,12 +1,12 @@
 ---
 - name: Install nginx web server
-  apt: 
+  apt:
     name: nginx
     state: latest
     force: yes
 
 - name: Copy vhost
-  template: 
+  template:
     src: "{{item}}.j2"
     dest: /etc/nginx/sites-available/{{item}}
   with_items:
@@ -15,13 +15,13 @@
   notify: restart nginx
 
 - name: Copy vhost cdn splashscreen
-  template: 
+  template:
     src: cdn.ideascube.local.j2
     dest: /etc/nginx/sites-available/{{server_name}}.local
   notify: restart nginx
 
 - name: Enable vhost
-  file: 
+  file:
     src: /etc/nginx/sites-available/{{item}}
     dest: /etc/nginx/sites-enabled/{{item}}
     state: link
@@ -32,12 +32,12 @@
   notify: restart nginx
 
 - name: Copy welcome page
-  template: 
+  template:
     src: welcome-cdn.html.j2
     dest: /var/www/html/index.html
 
 - name: Enable server_names_hash_bucket_size
-  lineinfile: 
+  lineinfile:
     dest: /etc/nginx/nginx.conf
     regexp: 'server_names_hash_bucket_size'
     line: 'server_names_hash_bucket_size 64;'
