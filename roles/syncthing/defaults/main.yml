@@ -8,6 +8,7 @@ syncthing_config:
  - { id: shiqa-hr5j5, label: "Kolibri", path: "{{ storage }}/kolibri" }
  - { id: n97vs-nyscj, label: "Hugo - Mediacenter", path: "{{ storage }}/hugo" }
  - { id: mpmcs-mwruq, label: "OpenStreetMap", path: "{{ storage }}/osm" }
+ - { id: yvtjn-y9cbu, label: "OLIP Descriptor", path: "{{ storage }}/olip-descriptor" }
 
 syncthing_master_id_device: 
   - { key: "7FSJQA4-K7VAENU-GRIVR4O-UBNEHHP-SNQYOR4-AZTZBHE-K5B2UQD-D4EBGAW", label: "Bubble", ip_address: 37.187.117.222, port: 22000 }
