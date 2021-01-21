@@ -9,3 +9,4 @@ cdn_name: cdn-ideascube
 timezone: Europe/Paris
 storage: /data
 external_hdd: false
+local_cache_server: "cdn-ideascube.local"
