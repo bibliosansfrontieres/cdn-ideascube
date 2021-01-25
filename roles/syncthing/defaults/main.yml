@@ -4,10 +4,9 @@ kawax_id: EHQO24A-A2JOFKB-J2H2WRW-4VUWFHZ-JJDRQP7-MHWDCRO-EMPKTXX-REUTHAX
 syncthing_config:
  - { id: eagml-hd53c, label: "Omeka packages", path: "{{ storage }}/omeka" }
  - { id: qaxgo-dqxnt, label: "Kiwix zim files", path: "{{ storage }}/zim" }
- - { id: pjg29-tncz9, label: "Static-site", path: "{{ storage }}/static-sites"}
  - { id: shiqa-hr5j5, label: "Kolibri", path: "{{ storage }}/kolibri" }
  - { id: n97vs-nyscj, label: "Hugo - Mediacenter", path: "{{ storage }}/hugo" }
- - { id: mpmcs-mwruq, label: "OpenStreetMap", path: "{{ storage }}/osm" }
+ - { id: yvtjn-y9cbu, label: "OLIP Descriptor", path: "{{ storage }}/olip-descriptor" }
 
 syncthing_master_id_device: 
   - { key: "7FSJQA4-K7VAENU-GRIVR4O-UBNEHHP-SNQYOR4-AZTZBHE-K5B2UQD-D4EBGAW", label: "Bubble", ip_address: 37.187.117.222, port: 22000 }
