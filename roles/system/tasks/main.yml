@@ -9,6 +9,13 @@
   debug: msg="External HDD has been detected. /dev/sda1 will be mounted to store the data. Size {{ ansible_devices.sda.partitions.sda1.size }}"
   when : external_hdd
 
+- block:
+  - name: Check if a local_cache_server cache machine is present on the local network
+    wait_for: host="{{ local_cache_server }}" port=80 state=present timeout=3
+    register: cache_machine
+  rescue:
+  - debug: msg="No cache machine has been detected on the local network"
+
 - name: Update and upgrade apt packages
   become: true
   apt:

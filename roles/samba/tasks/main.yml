@@ -20,6 +20,6 @@
   notify: [ 'Check samba config' ]
 
 - name: Register Samba service
-  service: 
+  service:
     name: samba-ad-dc
     enabled: yes

@@ -2,8 +2,6 @@
 username: cdn
 password: $6$YcJS1HjRAv/$1bUosoPalzHEvfpx71UhnG6vCeckTGbA5U1i6UpA8X21Jrv7fYRPyNrq/YWuiBp3xQWd5kRRhrKKPHcbTkkfQ/
 central_server: tincmaster.wan.bsf-intranet.org
-filer_bsf: http://filer.bsf-intranet.org
-bsf_gateway: "10.10.9.1"
 country: france
 project_name: noname
 server_name: "cdn-{{country}}-{{project_name}}"
@@ -11,3 +9,4 @@ cdn_name: cdn-ideascube
 timezone: Europe/Paris
 storage: /data
 external_hdd: false
+local_cache_server: "cdn-ideascube.local"

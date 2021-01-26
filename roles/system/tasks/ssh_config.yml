@@ -21,7 +21,7 @@
     - id_rsa
     - id_rsa.pub
   register: got_the_key
-  when: bsf_local_network.state|default(omit) == "present"
+  when: cache_machine.state|default(omit) == "present"
 
 - name: Generate a new ssh key
   shell: ssh-keygen -t rsa -b 4096 -C "{{ server_name }}" -f /root/.ssh/{{ server_name }} -N ""

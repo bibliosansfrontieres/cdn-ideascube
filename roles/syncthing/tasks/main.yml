@@ -100,7 +100,7 @@
   when: config_file.stat.exists == False
 
 - name: Autorize connexion from Web UI
-  lineinfile: 
+  lineinfile:
     dest: /home/{{username}}/.config/syncthing/config.xml
     regexp: '<address>127.0.0.1:8384</address>'
     line: '<address>{{syncthing_web_ui}}</address>'
@@ -109,7 +109,7 @@
   when: config_file.stat.exists == False
 
 - name: Create sync directory
-  file: 
+  file:
     path: "{{ item.path }}/.stfolder"
     state: directory
     owner: "{{username}}"
